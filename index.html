@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rain Prediction</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f0f8ff; }
+    label { display: block; margin-top: 10px; }
+    input, button { padding: 10px; margin-top: 5px; width: 200px; }
+    #result { margin-top: 20px; font-size: 18px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Will it rain tomorrow?</h1>
+  <label for="humidity">Humidity at 3pm:</label>
+  <input type="number" id="humidity" />
+
+  <label for="pressure">Pressure at 9am:</label>
+  <input type="number" id="pressure" />
+
+  <label for="temp">Temperature at 3pm:</label>
+  <input type="number" id="temp" />
+
+  <button onclick="getPrediction()">Predict</button>
+
+  <div id="result"></div>
+
+  <script>
+    async function getPrediction() {
+      const humidity = document.getElementById('humidity').value;
+      const pressure = document.getElementById('pressure').value;
+      const temp = document.getElementById('temp').value;
+
+      const response = await fetch('/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          Humidity3pm: humidity,
+          Pressure9am: pressure,
+          Temp3pm: temp
+        })
+      });
+
+      const result = await response.json();
+      document.getElementById('result').textContent = "🌧️ Will it rain tomorrow? " + result.rain_tomorrow;
+    }
+  </script>
+</body>
+</html>
